@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Horse Racing</title>
+	<style type="text/css">
+
+		body{
+			text-align: center;
+		}
+	
+		#horseContainer{
+			background-image: url('grass.jpeg');
+			background-repeat: repeat-x;
+			height: 350px;
+			padding-top: 20px;
+			width: 1000px;
+			margin: 0 auto;
+
+		}
+		.horse{
+			height: 50px;
+			width: 20px;
+			transition-duration: 1.2s;
+			margin: 5px;
+		}
+
+		.horsep{
+			padding: 5px;
+			font-size: 15px;
+			font-family: sans-serif;
+			color: yellow;
+			text-align: center;
+			font-weight: bold;
+		}
+
+		.horserunner{
+			background-image: url('horseimg.png');
+			background-size: cover;
+			float: right;
+			height: 100%;
+			width: 60px;
+		}
+
+		#beginrace{
+			cursor: pointer;
+			margin: 0 auto;
+			width: 300px;
+			height: 40px;
+			font-size: 15px;
+			border-radius: 0;
+			border: 0;
+			background-color: black;
+			color: white;
+		}
+
+		.rotated{
+			transform: rotate(12deg);
+		}
+
+	</style>
+</head>
+<body>
+
+	<div id="horseContainer">
+		<div id="horse1" class="horse"><div id="horse1runner" class="horserunner"><p id="horse1p" class="horsep"></p></div></div>
+		<div id="horse2" class="horse"><div id="horse2runner" class="horserunner"><p id="horse2p" class="horsep"></p></div></div>
+		<div id="horse3" class="horse"><div id="horse3runner" class="horserunner"><p id="horse3p" class="horsep"></p></div></div>
+		<div id="horse4" class="horse"><div id="horse4runner" class="horserunner"><p id="horse4p" class="horsep"></p></div></div>
+	</div>
+
+	<button id="beginrace">Bet on a horse</button>
+
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+	<script type="text/javascript">
+
+		var horse1 = $('#horse1');
+		var horse2 = $('#horse2');
+		var horse3 = $('#horse3');
+		var horse4 = $('#horse4');
+
+		var horse1p = $('#horse1p')
+		var horse2p = $('#horse2p')
+		var horse3p = $('#horse3p')
+		var horse4p = $('#horse4p')
+
+		var horse1Dist = -2;
+		var horse2Dist = -2;
+		var horse3Dist = -2;
+		var horse4Dist = -2;
+
+		var horse1runner = $('#horse1runner');
+		var horse2runner = $('#horse2runner');
+		var horse3runner = $('#horse3runner');
+		var horse4runner = $('#horse4runner');
+
+		var winCount=0;
+		var isInRace = false;
+
+		function horseRun(customhorse,customhorsedist,customhorsep,slowdown,maxdice,customhorserunner){
+
+			isInRace = true;
+			if (customhorsedist <= 200){
+					var randRun;
+					randRun = Math.floor(Math.random()*maxdice+1);
+					customhorsedist++;
+					customhorse.css('width',((customhorsedist * 5) + 'px'));
+					customhorsep.text(customhorsedist);
+
+					if (randRun == maxdice) {
+						setTimeout(function(){horseRun(customhorse,customhorsedist,customhorsep,slowdown,maxdice,customhorserunner); }, slowdown);
+					}else{
+						horseRun(customhorse,customhorsedist,customhorsep,slowdown,maxdice,customhorserunner);
+						customhorserunner.toggleClass('rotated');
+					}
+
+			}else{
+				winCount++;
+
+				switch(winCount){
+					case 1:
+					customhorsep.text('1st');
+					break;
+					case 2:
+					customhorsep.text('2nd');
+					break;
+					case 3:
+					customhorsep.text('3rd');
+					break;
+					case 4:
+					customhorsep.text('4th');
+					$('#beginrace').text('Click to race again!');
+					isInRace=false;
+					winCount = 0;
+					break;
+				}
+				
+			}
+		}
+
+		$('#beginrace').click(function(){
+			if (isInRace == false) {
+				$('#beginrace').text('Good Luck!');
+				horseRun(horse1,horse1Dist,horse1p,500,6,horse1runner);
+				horseRun(horse2,horse2Dist,horse2p,500,6,horse2runner);
+				horseRun(horse3,horse3Dist,horse3p,500,6,horse3runner);
+				horseRun(horse4,horse4Dist,horse4p,500,6,horse4runner);
+			};
+		})
+
+
+	</script>
+</body>
+</html>
